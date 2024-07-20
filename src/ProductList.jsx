@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-import { addItem } from "./CartSlice";
+import { addItem, removeItem } from "./CartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function ProductList() {
@@ -11,6 +11,18 @@ function ProductList() {
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  console.log(cartItems);
+  useEffect(() => {
+    const updatedAddedToCart = {};
+    cartItems.forEach((item) => {
+      updatedAddedToCart[item.name] = true;
+    });
+    setAddedToCart(updatedAddedToCart);
+  }, [cartItems]);
+
+  const totalItems = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
 
   const plantsArray = [
     {
@@ -291,13 +303,17 @@ function ProductList() {
 
   const [addedToCart, setAddedToCart] = useState({});
 
-  const handleAddToCart = (product) => {
-    console.log(product.name);
-    dispatch(addItem(product));
+  const handleAddToCart = (plant) => {
+    console.log(plant.name);
+    dispatch(addItem(plant));
     setAddedToCart((prevState) => ({
       ...prevState,
-      [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
+      [plant.name]: true, // Set the product name as key and value as true to indicate it's added to cart
     }));
+  };
+
+  const handleRemoveFromCart = (plant) => {
+    dispatch(removeItem(plant));
   };
 
   return (
@@ -328,6 +344,16 @@ function ProductList() {
             {" "}
             <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
               <h1 className="cart">
+                <label
+                  style={{
+                    zIndex: 1,
+                    position: "fixed",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  {totalItems()}
+                </label>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -381,7 +407,11 @@ function ProductList() {
                       }}
                       disabled={addedToCart[plant.name] ? true : false}
                       className="product-button"
-                      onClick={() => handleAddToCart(plant)}
+                      onClick={() =>
+                        addedToCart[plant.name]
+                          ? handleRemoveFromCart(plant)
+                          : handleAddToCart(plant)
+                      }
                     >
                       Add to Cart
                     </button>
