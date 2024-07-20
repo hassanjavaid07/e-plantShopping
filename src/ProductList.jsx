@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
+import { addItem } from "./CartSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 function ProductList() {
   const [showCart, setShowCart] = useState(false);
-  const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+  const [showPlants, setShowPlants] = useState(false);
+  // State to control the visibility of the About Us page
+
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
 
   const plantsArray = [
     {
@@ -285,6 +292,7 @@ function ProductList() {
   const [addedToCart, setAddedToCart] = useState({});
 
   const handleAddToCart = (product) => {
+    console.log(product.name);
     dispatch(addItem(product));
     setAddedToCart((prevState) => ({
       ...prevState,
@@ -303,7 +311,7 @@ function ProductList() {
             />
             <a href="/" style={{ textDecoration: "none" }}>
               <div>
-                <h3 style={{ color: "white" }}>Paradise Nursery</h3>
+                <h3 style={{ color: "white" }}>Hassan's Paradise Nursery</h3>
                 <i style={{ color: "white" }}>Where Green Meets Serenity</i>
               </div>
             </a>
@@ -366,6 +374,12 @@ function ProductList() {
                     </div>
                     <div className="product-cost">{plant.cost}</div>
                     <button
+                      style={{
+                        backgroundColor: addedToCart[plant.name]
+                          ? "gray"
+                          : "#615EFC",
+                      }}
+                      disabled={addedToCart[plant.name] ? true : false}
                       className="product-button"
                       onClick={() => handleAddToCart(plant)}
                     >
