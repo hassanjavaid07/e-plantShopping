@@ -48,6 +48,13 @@ body {
   align-items: center;
   justify-content: center;
 }
+.category-title {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 .product-list {
   display: flex;
   flex-wrap: wrap;

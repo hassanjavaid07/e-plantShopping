@@ -388,7 +388,7 @@ function ProductList(props) {
           {plantsArray.map((category, index) => (
             <div key={index}>
               <h1>
-                <div>{category.category}</div>
+                <div className="category-title">{category.category}</div>
               </h1>
               <div className="product-list">
                 {category.plants.map((plant, plantIndex) => (
